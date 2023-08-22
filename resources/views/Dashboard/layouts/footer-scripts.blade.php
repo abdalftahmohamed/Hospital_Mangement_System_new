@@ -2,6 +2,8 @@
 <a href="#top" id="back-to-top"><i class="las la-angle-double-up"></i></a>
 <!-- JQuery min js -->
 <script src="{{URL::asset('Dashboard/plugins/jquery/jquery.min.js')}}"></script>
+{{--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>--}}
+
 <!-- Bootstrap Bundle js -->
 <script src="{{URL::asset('Dashboard/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <!-- Ionicons js -->
@@ -52,21 +54,6 @@
 <script src="{{URL::asset('Dashboard/plugins/datatable/js/responsive.bootstrap4.min.js')}}"></script>
 <!--Internal  Datatable js -->
 <script src="{{URL::asset('Dashboard/js/table-data.js')}}"></script>
-<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 
-<script>
-
-    // Enable pusher logging - don't include this in production
-    Pusher.logToConsole = true;
-
-    var pusher = new Pusher('3a62d77f44f1eddffb70', {
-        cluster: 'mt1'
-    });
-
-    var channel = pusher.subscribe('my-channel');
-    channel.bind('my-event', function(data) {
-        alert(JSON.stringify(data));
-    });
-</script>
 
 @livewireScripts

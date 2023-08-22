@@ -39,6 +39,7 @@ Route::group(
 
    //################################ dashboard user ##########################################
     Route::get('/dashboard/user', function () {
+
         return view('Dashboard.User.dashboard');
     })->middleware(['auth'])->name('dashboard.user');
     //################################ end dashboard user #####################################
