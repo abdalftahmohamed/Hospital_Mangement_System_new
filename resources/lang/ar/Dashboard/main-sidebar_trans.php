@@ -6,6 +6,7 @@ return [
    'index'=>'الرئيسية',
    'sections'=>'الاقسام',
     'view_all'=>'عرض الكل',
+    'Notification'=>'الإشعارات',
 
 
 

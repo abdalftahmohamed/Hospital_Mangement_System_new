@@ -184,25 +184,43 @@
                     <div class="dropdown-menu dropdown-notifications">
                         <div class="menu-header-content bg-primary text-right">
                             <div class="d-flex">
-                                <h6 class="dropdown-title mb-1 tx-15 text-white font-weight-semibold">Notifications</h6>
+                                <h6 class="dropdown-title mb-1 tx-15 text-white font-weight-semibold">{{trans('Dashboard/main-sidebar_trans.Notification')}}</h6>
                                 <span
                                     class="badge badge-pill badge-warning mr-auto my-auto float-left">Mark All Read</span>
                             </div>
-                            <p data-count="0" class="dropdown-title-text subtext mb-0 text-white op-6 pb-0 tx-12 notif-count">0</p>
+                            <p data-count="{{\App\Models\Notification::countNotification(auth()->user()->name)->count()}}"
+                               class="dropdown-title-text subtext mb-0 text-white op-6 pb-0 tx-12 notif-count">{{\App\Models\Notification::countNotification(auth()->user()->name)->count()}}</p>
                         </div>
                         <div class="main-notification-list Notification-scroll">
-                            <a class="d-flex p-3 border-bottom" href="#">
-                                <div class="notifyimg bg-pink">
-                                    <i class="la la-file-alt text-white"></i>
-                                </div>
-                                <div class="mr-3">
-                                    <h5 class="notification-label mb-1">New files available</h5>
-                                    <div class="notification-subtext">10 hour ago</div>
-                                </div>
-                                <div class="mr-auto">
-                                    <i class="las la-angle-left text-left text-muted"></i>
-                                </div>
-                            </a>
+                            <div class="new_message">
+                                <a class="d-flex p-3 border-bottom" href="#">
+                                    <div class="notifyimg bg-pink">
+                                        <i class="la la-file-alt text-white"></i>
+                                    </div>
+                                    <div class="mr-3">
+                                        <h4 class="notification-label mb-1"></h4>
+                                        <div class="notification-subtext"></div>
+                                    </div>
+                                    <div class="mr-auto">
+                                        <i class="las la-angle-left text-left text-muted"></i>
+                                    </div>
+                                </a>
+                            </div>
+
+                            @foreach(\App\Models\Notification::countNotification(auth()->user()->name)->get() as $notification)
+                                <a class="d-flex p-3 border-bottom" href="#">
+                                    <div class="notifyimg bg-pink">
+                                        <i class="la la-file-alt text-white"></i>
+                                    </div>
+                                    <div class="mr-3">
+                                        <h5 class="notification-label mb-1">{{$notification->message}}</h5>
+                                        <div class="notification-subtext">{{$notification->created_at}}</div>
+                                    </div>
+                                    <div class="mr-auto">
+                                        <i class="las la-angle-left text-left text-muted"></i>
+                                    </div>
+                                </a>
+                            @endforeach
 
                         </div>
                         <div class="dropdown-footer">
@@ -277,19 +295,20 @@
 {{--#pusher notifications--}}
 {{--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>--}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 
 {{--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>--}}
 {{--<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>--}}
 
-<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
-
 
 <script>
 
-    var notificationsWrapper   = $('.dropdown-notifications');
+    var notificationsWrapper = $('.dropdown-notifications');
     var notificationsCountElem = notificationsWrapper.find('p[data-count]');
-    var notificationsCount  = parseInt(notificationsCountElem.data('count'));
-    var notifications = notificationsWrapper.find('h5.notification-label');
+    var notificationsCount = parseInt(notificationsCountElem.data('count'));
+    var notifications = notificationsWrapper.find('h4.notification-label');
+    var new_message = notificationsWrapper.find('.new_message');
+    new_message.hide();
 
     // if (notificationsCount <= 0) {
     //     notificationsWrapper.hide();
@@ -301,16 +320,19 @@
     var pusher = new Pusher('3a62d77f44f1eddffb70', {
         cluster: 'mt1'
     });
-    var channel = pusher.subscribe('my-channel');
+    var channel = pusher.subscribe('create-invoice');
     // #the name of event to read data where location
-    channel.bind('App\\Events\\MyEvent', function(data) {
+    channel.bind('App\\Events\\CreateInvoice', function (data) {
         // alert(JSON.stringify(data));
-        var existingNotifications = notifications.html();
-        var newNotificationHtml = `<h5 class="notification-label mb-1">`+data.patient_id+`</h5>`;
-        notifications.html(newNotificationHtml + existingNotifications);
+        // var existingNotifications = notifications.html();
+        var newNotificationHtml = `
+        <h4 class="notification-label mb-1">` + data.message + data.patient + `</h4>
+        <div class="notification-subtext">` + data.created_at + `</div>`;
+        new_message.show();
+        notifications.html(newNotificationHtml);
         notificationsCount += 1;
         notificationsCountElem.attr('data-count', notificationsCount);
         notificationsWrapper.find('.notif-count').text(notificationsCount);
+        notificationsWrapper.show();
     });
-    notificationsWrapper.show();
 </script>
