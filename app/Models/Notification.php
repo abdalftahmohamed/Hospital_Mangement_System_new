@@ -11,8 +11,8 @@ class Notification extends Model
     protected $guarded=[];
 
 
-    public function scopeCountNotification($query,$username)
+    public function scopeCountNotification($query,$user_id)
     {
-        $query->where([['username',$username],['reader_status',0]]);
+        $query->where([['user_id',$user_id],['reader_status',0]]);
     }
 }

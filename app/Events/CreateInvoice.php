@@ -18,6 +18,7 @@ class CreateInvoice implements ShouldBroadcast
 
     public $patient;
     public $invoice_id;
+    public $doctor_id;
     public $message;
     public $created_at;
 
@@ -25,6 +26,7 @@ class CreateInvoice implements ShouldBroadcast
     public function __construct($data)
     {
         $patient = Patient::find($data['patient']);
+        $this->doctor_id=$data['doctor_id'];
         $this->patient = $patient->name;
         $this->invoice_id = $data['invoice_id'];
         $this->message = "كشف جديد : ";
@@ -34,7 +36,11 @@ class CreateInvoice implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        //return new PrivateChannel('channel-name');
-        return ['create-invoice'];
+        return new PrivateChannel('create-invoice.'.$this->doctor_id);
+//        return ['create-invoice'];
+    }
+    public function broadcastAs()
+    {
+        return 'create-invoice';
     }
 }

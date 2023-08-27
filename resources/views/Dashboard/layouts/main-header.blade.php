@@ -188,8 +188,8 @@
                                 <span
                                     class="badge badge-pill badge-warning mr-auto my-auto float-left">Mark All Read</span>
                             </div>
-                            <p data-count="{{\App\Models\Notification::countNotification(auth()->user()->name)->count()}}"
-                               class="dropdown-title-text subtext mb-0 text-white op-6 pb-0 tx-12 notif-count">{{\App\Models\Notification::countNotification(auth()->user()->name)->count()}}</p>
+                            <p data-count="{{\App\Models\Notification::countNotification(auth()->user()->id)->count()}}"
+                               class="dropdown-title-text subtext mb-0 text-white op-6 pb-0 tx-12 notif-count">{{\App\Models\Notification::countNotification(auth()->user()->id)->count()}}</p>
                         </div>
                         <div class="main-notification-list Notification-scroll">
                             <div class="new_message">
@@ -207,7 +207,7 @@
                                 </a>
                             </div>
 
-                            @foreach(\App\Models\Notification::countNotification(auth()->user()->name)->get() as $notification)
+                            @foreach(\App\Models\Notification::countNotification(auth()->user()->id)->get() as $notification)
                                 <a class="d-flex p-3 border-bottom" href="#">
                                     <div class="notifyimg bg-pink">
                                         <i class="la la-file-alt text-white"></i>
@@ -293,36 +293,46 @@
 </div>
 
 {{--#pusher notifications--}}
-{{--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>--}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
 <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+<script src="{{asset('js/app.js')}}"></script>
+{{--@vite(resource.js.app.jd)--}}
 
+{{--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>--}}
 {{--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>--}}
 {{--<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>--}}
 
 
 <script>
-
     var notificationsWrapper = $('.dropdown-notifications');
     var notificationsCountElem = notificationsWrapper.find('p[data-count]');
+
     var notificationsCount = parseInt(notificationsCountElem.data('count'));
     var notifications = notificationsWrapper.find('h4.notification-label');
     var new_message = notificationsWrapper.find('.new_message');
     new_message.hide();
-
     // if (notificationsCount <= 0) {
     //     notificationsWrapper.hide();
     // }
 
-
-    // Enable pusher logging - don't include this in production
-    Pusher.logToConsole = true;
-    var pusher = new Pusher('3a62d77f44f1eddffb70', {
-        cluster: 'mt1'
-    });
-    var channel = pusher.subscribe('create-invoice');
+    // // Enable pusher logging - don't include this in production
+    // Pusher.logToConsole = true;
+    // var pusher = new Pusher('3a62d77f44f1eddffb70', {
+    //     cluster: 'mt1'
+    // });
+    // var channel = pusher.subscribe('create-invoice');
     // #the name of event to read data where location
-    channel.bind('App\\Events\\CreateInvoice', function (data) {
+
+    // // Assuming you have a function to navigate to the "invoices" route
+    // function navigateToInvoicesRoute() {
+    //     // Replace this line with actual navigation code
+    //     window.location.href = '/single_invoices'; // Change the URL to your actual route
+    // }
+
+
+
+    Echo.private('create-invoice.{{auth()->user()->id}}').listen('.create-invoice',(data)=>{
+        // channel.bind('App\\Events\\CreateInvoice', function (data) {
         // alert(JSON.stringify(data));
         // var existingNotifications = notifications.html();
         var newNotificationHtml = `
@@ -334,5 +344,12 @@
         notificationsCountElem.attr('data-count', notificationsCount);
         notificationsWrapper.find('.notif-count').text(notificationsCount);
         notificationsWrapper.show();
+
+        // // Show the notification for 4 seconds
+        // setTimeout(function() {
+        //     notificationsWrapper.hide();
+        //     // Return to the "invoices" route after 4 seconds
+        //     navigateToInvoicesRoute();
+        // }, 2000); // 4000 milliseconds = 4 seconds
     });
 </script>

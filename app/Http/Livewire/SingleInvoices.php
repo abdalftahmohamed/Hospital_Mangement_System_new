@@ -27,7 +27,7 @@ class SingleInvoices extends Component
     public $username;
 
     public function mount(){
-        $this->username=auth()->user()->name;
+        $this->user_id=auth()->user()->id;
     }
 
     public function render()
@@ -167,7 +167,7 @@ class SingleInvoices extends Component
 
 
                     $notifications = new Notification();
-                    $notifications->username = $this->username;
+                    $notifications->user_id = $this->doctor_id;
                     $notifications->message = "كشف جديد : ".$single_invoices->Patient()->first()->name;
                     $notifications->save();
 
@@ -175,6 +175,7 @@ class SingleInvoices extends Component
                     $data=[
                         'patient'=>$this->patient_id,
                         'invoice_id'=>$single_invoices->id,
+                        'doctor_id'=>$this->doctor_id,
                     ];
 
                     event(new CreateInvoice($data));
