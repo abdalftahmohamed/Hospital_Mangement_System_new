@@ -11,7 +11,7 @@ class Patient extends Authenticatable
     use Translatable;
     use HasFactory;
     public $translatedAttributes = ['name','Address'];
-    public $fillable= ['email','Password','Date_Birth','Phone','Gender','Blood_Group'];
+    public $fillable= ['email','Password','Date_Birth','name','Phone','Gender','Blood_Group'];
 
     public function doctor()
     {

@@ -13,8 +13,13 @@ class Conversation extends Model
     public function scopechekConversation($query,$auth_email,$receiver_email){
 
         return $query->where('sender_email',$auth_email)
-            ->where('receiver_email',$receiver_email)->orwhere('receiver_email',$auth_email)->
-            where('sender_email',$receiver_email);
-
+            ->where('receiver_email',$receiver_email)
+            ->orwhere('receiver_email',$auth_email)
+            ->where('sender_email',$receiver_email);
     }
+
+    public function messages(){
+        return $this->hasMany(Message::class);
+    }
+
 }

@@ -7,6 +7,8 @@ use App\Http\Controllers\Dashboard_Doctor\RayController;
 use App\Http\Controllers\Dashboard_Doctor\PatientDetailsController;
 
 use App\Http\Controllers\doctor\InvoiceController;
+use App\Http\Livewire\Chat\CreateChat;
+use App\Http\Livewire\Chat\Main;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -90,6 +92,12 @@ Route::group(
 
             //############################# end rays route ######################################
 
+
+
+            //############################# Chat route ##########################################
+            Route::get('list/patients',Createchat::class)->name('list.patients');
+            Route::get('chat/patients',Main::class)->name('chat.patients');
+            //############################# end Chat route ######################################
         });
 
 
