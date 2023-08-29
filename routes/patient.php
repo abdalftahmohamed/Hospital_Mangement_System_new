@@ -1,12 +1,10 @@
 <?php
 
 
-use App\Http\Controllers\Dashboard_Doctor\DiagnosticController;
-use App\Http\Controllers\Dashboard_Doctor\LaboratorieController;
-use App\Http\Controllers\Dashboard_Doctor\RayController;
-use App\Http\Controllers\Dashboard_Doctor\PatientDetailsController;
+
 use App\Http\Controllers\Dashboard_Patient\PatientController;
-use App\Http\Controllers\Dashboard_Ray_Employee\InvoiceController;
+use App\Http\Livewire\Chat\CreateChat;
+use App\Http\Livewire\Chat\Main;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -44,6 +42,11 @@ Route::group(
         Route::get('payments', [PatientController::class,'payments'])->name('payments.patient');
         //############################# end patients route ######################################
 
+        //############################# Chat route ##########################################
+        Route::get('list/doctors',Createchat::class)->name('list.doctors');
+        Route::get('chat/doctors',Main::class)->name('chat.doctors');
+
+        //############################# end Chat route ######################################
     });
 
 
