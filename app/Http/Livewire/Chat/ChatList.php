@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Chat;
 use App\Models\Conversation;
 use App\Models\Doctor;
 use App\Models\Patient;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class ChatList extends Component
@@ -32,6 +33,24 @@ class ChatList extends Component
             return $this->receviverUser->$request;
         }
     }
+
+    public function chatUserSelected(Conversation $conversation ,$receiver_id){
+
+        $this->selected_conversation = $conversation;
+        $this->receviverUser = Doctor::find($receiver_id);
+        if(Auth::guard('patient')->check()){
+            $this->emitTo('chat.chat-box','load_conversationDoctor', $this->selected_conversation, $this->receviverUser);
+        }
+        else{
+            $this->emitTo('chat.chat-box','load_conversationPatient', $this->selected_conversation, $this->receviverUser);
+        }
+        $this->emitTo('chat.send-message','updateMessage',$this->selected_conversation,$this->receviverUser);
+
+
+    }
+
+
+
     public function render()
     {
         $this->conversations = Conversation::where('sender_email',$this->auth_email)->orwhere('receiver_email',$this->auth_email)

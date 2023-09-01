@@ -34,7 +34,7 @@ Route::group(
 
     Route::get('/dashboard/doctor', function () {
         return view('Dashboard.doctor.dashboard');
-    })->middleware(['auth:doctor'])->name('dashboard.admin');
+    })->middleware(['auth:doctor'])->name('dashboard.doctor');
 
     //################################ end dashboard doctor #####################################
 

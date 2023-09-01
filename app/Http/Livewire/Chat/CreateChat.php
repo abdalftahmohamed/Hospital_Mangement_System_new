@@ -23,7 +23,6 @@ class CreateChat extends Component
 
     public function createConversation($receiver_email)
     {
-
         $chek_Conversation = Conversation::chekConversation($this->auth_email, $receiver_email)->get();
         if ($chek_Conversation->isEmpty()) {
             DB::beginTransaction();
@@ -40,6 +39,7 @@ class CreateChat extends Component
                     'sender_email' => $this->auth_email,
                     'receiver_email' => $receiver_email,
                     'body' => 'السلام عليكم',
+                    'type' => 0,
                 ]);
                 DB::commit();
                 $this->emitSelf('render');
