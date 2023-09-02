@@ -14,11 +14,19 @@ class ChatList extends Component
     public $conversations;
     public $auth_email;
     public $receviverUser;
-
+    public $auth_id;
+    public $selected_conversation;
+    protected $listeners = ['chatUserSelected','refresh'=>'$refresh'];
 
     public function mount()
     {
-        $this->auth_email = auth()->user()->email;
+        if (Auth::guard('patient')->check()) {
+            $this->auth_email = Auth::guard('patient')->user()->email;
+            $this->auth_id = Auth::guard('patient')->user()->id;
+        } else {
+            $this->auth_email = Auth::guard('doctor')->user()->email;
+            $this->auth_id = Auth::guard('doctor')->user()->id;
+        }
     }
 
     public function getUsers(Conversation $conversation ,$request){
@@ -29,7 +37,8 @@ class ChatList extends Component
         else{
             $this->receviverUser = Patient::firstwhere('email',$conversation->sender_email);
         }
-        if ($this->receviverUser && isset($request)) {
+//        $this->receviverUser &&
+        if (isset($request)) {
             return $this->receviverUser->$request;
         }
     }

@@ -23,8 +23,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-8 col-lg-7">
-            <div class="card">
+        <div class="col-xl-8 col-lg-7" style="max-height: 100px; max-width: 800px; color: red; font-size: 20px;">
+            <div class="card" >
                 <a class="main-header-arrow" href="" id="ChatBodyHide"><i class="icon ion-md-arrow-back"></i></a>
                 @livewire('chat.chat-box')
                 @livewire('chat.send-message')
