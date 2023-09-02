@@ -49,11 +49,13 @@ class ChatList extends Component
         $this->receviverUser = Doctor::find($receiver_id);
         if(Auth::guard('patient')->check()){
             $this->emitTo('chat.chat-box','load_conversationDoctor', $this->selected_conversation, $this->receviverUser);
+            $this->emitTo('chat.send-message','updateMessage',$this->selected_conversation,$this->receviverUser);
+
         }
         else{
             $this->emitTo('chat.chat-box','load_conversationPatient', $this->selected_conversation, $this->receviverUser);
+            $this->emitTo('chat.send-message','updateMessage2',$this->selected_conversation,$this->receviverUser);
         }
-        $this->emitTo('chat.send-message','updateMessage',$this->selected_conversation,$this->receviverUser);
 
 
     }

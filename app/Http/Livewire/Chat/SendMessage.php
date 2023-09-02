@@ -3,9 +3,11 @@
 namespace App\Http\Livewire\Chat;
 
 use App\Events\MessageSend;
+use App\Events\MessageSend2;
 use App\Models\Conversation;
 use App\Models\Doctor;
 use App\Models\Message;
+use App\Models\Patient;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -18,7 +20,7 @@ class SendMessage extends Component
     public $auth_email;
     public $sender;
     public $createdMessage;
-    protected $listeners = ['updateMessage','dispatchSendMessage'];
+    protected $listeners = ['updateMessage', 'dispatchSendMessage','updateMessage2'];
 
     public function mount()
     {
@@ -32,7 +34,15 @@ class SendMessage extends Component
     }
 
 
-    public function updateMessage(Conversation $conversation, Doctor $receiver){
+    public function updateMessage(Conversation $conversation, Doctor $receiver)
+    {
+        $this->selected_conversation = $conversation;
+        $this->receviverUser = $receiver;
+    }
+
+
+    public function updateMessage2(Conversation $conversation, Patient $receiver)
+    {
         $this->selected_conversation = $conversation;
         $this->receviverUser = $receiver;
     }
@@ -41,7 +51,7 @@ class SendMessage extends Component
     public function sendMessage()
     {
 
-        if($this->body == null){
+        if ($this->body == null) {
 
             return null;
         }
@@ -55,21 +65,32 @@ class SendMessage extends Component
         $this->selected_conversation->last_time_message = $this->createdMessage->created_at;
         $this->selected_conversation->save();
         $this->reset('body');
-        $this->emitTo('chat.chat-box','pushMessage',$this->createdMessage->id);
-        $this->emitTo('chat.chat-list','refresh');
+        $this->emitTo('chat.chat-box', 'pushMessage', $this->createdMessage->id);
+        $this->emitTo('chat.chat-list', 'refresh');
 
         $this->emitSelf('dispatchSendMessage');
     }
 
-    public function dispatchSendMessage(){
-        broadcast(new MessageSend(
-            $this->sender,
-            $this->createdMessage,
-            $this->selected_conversation,
-            $this->receviverUser
-        ));
-    }
+    public function dispatchSendMessage()
+    {
+        if (Auth::guard('patient')->check()) {
+            broadcast(new MessageSend(
+                $this->sender,
+                $this->createdMessage,
+                $this->selected_conversation,
+                $this->receviverUser
+            ));
+        } else {
+            broadcast(new MessageSend2(
+                $this->sender,
+                $this->createdMessage,
+                $this->selected_conversation,
+                $this->receviverUser
+            ));
+        }
 
+
+    }
 
 
     public function render()

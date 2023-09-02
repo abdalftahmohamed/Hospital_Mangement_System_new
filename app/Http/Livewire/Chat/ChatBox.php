@@ -56,7 +56,10 @@ class ChatBox extends Component
 
         $broadcastMessage = Message::find($event['message_id']);
         $broadcastMessage->read = 1;
-        $this->pushMessage($broadcastMessage->id);
+        $broadcastMessage->save();
+        if ($this->selected_conversation){
+            $this->pushMessage($broadcastMessage->id);
+        }
         $this->emitTo('chat.chat-list','refresh');
     }
 
