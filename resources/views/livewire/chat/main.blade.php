@@ -1,5 +1,6 @@
 @extends('Dashboard.layouts.master')
 @section('css')
+
 @endsection
 @section('page-header')
     <!-- breadcrumb -->
@@ -23,7 +24,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-8 col-lg-7" style="max-height: 100px; max-width: 800px; color: red; font-size: 20px;">
+        <div class="col-xl-8 col-lg-7" style="max-height: 50%; max-width: 50%; color: red; font-size: 20px;">
             <div class="card" >
                 <a class="main-header-arrow" href="" id="ChatBodyHide"><i class="icon ion-md-arrow-back"></i></a>
                 @livewire('chat.chat-box')
